@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت - موزیک استریم</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Admin Sidebar -->
+    <div class="admin-sidebar">
+        <div class="admin-logo">
+            <i class="fas fa-cogs"></i>
+            <span>پنل مدیریت</span>
+        </div>
+        
+        <nav class="admin-nav">
+            <a href="#" class="nav-item active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>داشبورد</span>
+            </a>
+            <a href="#" class="nav-item" data-section="music-management">
+                <i class="fas fa-music"></i>
+                <span>مدیریت موزیک</span>
+            </a>
+            <a href="#" class="nav-item" data-section="playlist-management">
+                <i class="fas fa-list"></i>
+                <span>مدیریت پلی‌لیست</span>
+            </a>
+            <a href="#" class="nav-item" data-section="user-management">
+                <i class="fas fa-users"></i>
+                <span>مدیریت کاربران</span>
+            </a>
+            <a href="#" class="nav-item" data-section="content-management">
+                <i class="fas fa-file-alt"></i>
+                <span>مدیریت محتوا</span>
+            </a>
+            <a href="#" class="nav-item" data-section="file-manager">
+                <i class="fas fa-folder"></i>
+                <span>مدیریت فایل</span>
+            </a>
+            <a href="#" class="nav-item" data-section="analytics">
+                <i class="fas fa-chart-bar"></i>
+                <span>آمار و گزارش</span>
+            </a>
+            <a href="#" class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i>
+                <span>تنظیمات</span>
+            </a>
+            <a href="#" class="nav-item" data-section="backup">
+                <i class="fas fa-download"></i>
+                <span>پشتیبان‌گیری</span>
+            </a>
+        </nav>
+
+        <div class="admin-user">
+            <img src="images/admin-avatar.jpg" alt="Admin" class="admin-avatar">
+            <div class="admin-info">
+                <div class="admin-name">مدیر سیستم</div>
+                <div class="admin-role">ادمین</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Admin Content -->
+    <div class="admin-main">
+        <header class="admin-header">
+            <div class="header-left">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 id="section-title">داشبورد</h1>
+            </div>
+            <div class="header-right">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </button>
+                <a href="index.html" class="back-to-site-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    بازگشت به سایت
+                </a>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <div class="admin-section active" id="dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="total-tracks">0</div>
+                        <div class="stat-label">کل آهنگ‌ها</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="total-users">0</div>
+                        <div class="stat-label">کاربران</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="total-playlists">0</div>
+                        <div class="stat-label">پلی‌لیست‌ها</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="total-plays">0</div>
+                        <div class="stat-label">پخش امروز</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>آمار پخش ماهانه</h3>
+                    <canvas id="monthly-chart"></canvas>
+                </div>
+                <div class="dashboard-card">
+                    <h3>محبوب‌ترین آهنگ‌ها</h3>
+                    <div class="popular-tracks" id="popular-tracks-admin">
+                        <!-- Popular tracks will be loaded here -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>فعالیت‌های اخیر</h3>
+                    <div class="recent-activities" id="recent-activities">
+                        <!-- Recent activities will be loaded here -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>وضعیت سیستم</h3>
+                    <div class="system-status">
+                        <div class="status-item">
+                            <span class="status-label">حافظه:</span>
+                            <div class="status-bar">
+                                <div class="status-fill" style="width: 45%"></div>
+                            </div>
+                            <span class="status-value">45%</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">CPU:</span>
+                            <div class="status-bar">
+                                <div class="status-fill" style="width: 32%"></div>
+                            </div>
+                            <span class="status-value">32%</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">فضای دیسک:</span>
+                            <div class="status-bar">
+                                <div class="status-fill" style="width: 67%"></div>
+                            </div>
+                            <span class="status-value">67%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Music Management Section -->
+        <div class="admin-section" id="music-management">
+            <div class="section-header">
+                <h2>مدیریت موزیک</h2>
+                <button class="btn-primary" onclick="showUploadModal()">
+                    <i class="fas fa-plus"></i>
+                    افزودن آهنگ جدید
+                </button>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" id="music-search" placeholder="جستجوی آهنگ، هنرمند یا آلبوم...">
+                <select id="genre-filter">
+                    <option value="">همه ژانرها</option>
+                    <option value="پاپ">پاپ</option>
+                    <option value="راک">راک</option>
+                    <option value="سنتی">سنتی</option>
+                    <option value="بالاد">بالاد</option>
+                </select>
+                <button class="btn-secondary" onclick="exportMusicData()">
+                    <i class="fas fa-download"></i>
+                    خروجی Excel
+                </button>
+            </div>
+
+            <div class="music-table-container">
+                <table class="admin-table" id="music-table">
+                    <thead>
+                        <tr>
+                            <th>کاور</th>
+                            <th>عنوان</th>
+                            <th>هنرمند</th>
+                            <th>آلبوم</th>
+                            <th>ژانر</th>
+                            <th>مدت زمان</th>
+                            <th>تعداد پخش</th>
+                            <th>تاریخ افزودن</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="music-table-body">
+                        <!-- Music data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Playlist Management Section -->
+        <div class="admin-section" id="playlist-management">
+            <div class="section-header">
+                <h2>مدیریت پلی‌لیست</h2>
+                <button class="btn-primary" onclick="createNewPlaylist()">
+                    <i class="fas fa-plus"></i>
+                    ایجاد پلی‌لیست جدید
+                </button>
+            </div>
+
+            <div class="playlist-grid" id="admin-playlist-grid">
+                <!-- Playlists will be loaded here -->
+            </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div class="admin-section" id="user-management">
+            <div class="section-header">
+                <h2>مدیریت کاربران</h2>
+                <button class="btn-primary" onclick="showAddUserModal()">
+                    <i class="fas fa-user-plus"></i>
+                    افزودن کاربر جدید
+                </button>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" id="user-search" placeholder="جستجوی کاربر...">
+                <select id="user-role-filter">
+                    <option value="">همه نقش‌ها</option>
+                    <option value="admin">ادمین</option>
+                    <option value="user">کاربر عادی</option>
+                    <option value="vip">کاربر VIP</option>
+                </select>
+                <select id="user-status-filter">
+                    <option value="">همه وضعیت‌ها</option>
+                    <option value="active">فعال</option>
+                    <option value="inactive">غیرفعال</option>
+                    <option value="banned">مسدود</option>
+                </select>
+            </div>
+
+            <div class="users-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>آواتار</th>
+                            <th>نام</th>
+                            <th>ایمیل</th>
+                            <th>نقش</th>
+                            <th>وضعیت</th>
+                            <th>تاریخ عضویت</th>
+                            <th>آخرین فعالیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <!-- Users data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Content Management Section -->
+        <div class="admin-section" id="content-management">
+            <div class="section-header">
+                <h2>مدیریت محتوا</h2>
+                <button class="btn-primary" onclick="showContentModal()">
+                    <i class="fas fa-plus"></i>
+                    افزودن محتوای جدید
+                </button>
+            </div>
+
+            <div class="content-tabs">
+                <button class="tab-btn active" data-tab="pages">صفحات</button>
+                <button class="tab-btn" data-tab="banners">بنرها</button>
+                <button class="tab-btn" data-tab="announcements">اعلانات</button>
+                <button class="tab-btn" data-tab="featured">محتوای ویژه</button>
+            </div>
+
+            <div class="tab-content active" id="pages-tab">
+                <div class="pages-grid" id="pages-grid">
+                    <!-- Pages will be loaded here -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="banners-tab">
+                <div class="banners-grid" id="banners-grid">
+                    <!-- Banners will be loaded here -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="announcements-tab">
+                <div class="announcements-list" id="announcements-list">
+                    <!-- Announcements will be loaded here -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="featured-tab">
+                <div class="featured-content" id="featured-content">
+                    <!-- Featured content will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- File Manager Section -->
+        <div class="admin-section" id="file-manager">
+            <div class="section-header">
+                <h2>مدیریت فایل</h2>
+                <div class="file-actions">
+                    <button class="btn-primary" onclick="showUploadFileModal()">
+                        <i class="fas fa-upload"></i>
+                        آپلود فایل
+                    </button>
+                    <button class="btn-secondary" onclick="createFolder()">
+                        <i class="fas fa-folder-plus"></i>
+                        ایجاد پوشه
+                    </button>
+                </div>
+            </div>
+
+            <div class="file-manager-container">
+                <div class="file-path">
+                    <span id="current-path">/</span>
+                </div>
+                <div class="file-grid" id="file-grid">
+                    <!-- Files and folders will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div class="admin-section" id="analytics">
+            <div class="section-header">
+                <h2>آمار و گزارش</h2>
+                <div class="date-filter">
+                    <input type="date" id="start-date">
+                    <input type="date" id="end-date">
+                    <button class="btn-secondary" onclick="updateAnalytics()">
+                        <i class="fas fa-sync"></i>
+                        بروزرسانی
+                    </button>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>آمار بازدید</h3>
+                    <canvas id="visits-chart"></canvas>
+                </div>
+                <div class="analytics-card">
+                    <h3>ژانرهای محبوب</h3>
+                    <canvas id="genres-chart"></canvas>
+                </div>
+                <div class="analytics-card">
+                    <h3>آمار کاربران</h3>
+                    <canvas id="users-chart"></canvas>
+                </div>
+                <div class="analytics-card">
+                    <h3>گزارش درآمد</h3>
+                    <canvas id="revenue-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="admin-section" id="settings">
+            <div class="section-header">
+                <h2>تنظیمات سیستم</h2>
+            </div>
+
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3>تنظیمات عمومی</h3>
+                    <form id="general-settings">
+                        <div class="form-group">
+                            <label>نام سایت:</label>
+                            <input type="text" value="موزیک استریم">
+                        </div>
+                        <div class="form-group">
+                            <label>شعار سایت:</label>
+                            <input type="text" value="پخش آنلاین موسیقی">
+                        </div>
+                        <div class="form-group">
+                            <label>ایمیل مدیر:</label>
+                            <input type="email" value="admin@musicstream.com">
+                        </div>
+                        <button type="submit" class="btn-primary">ذخیره</button>
+                    </form>
+                </div>
+
+                <div class="settings-card">
+                    <h3>تنظیمات پخش</h3>
+                    <form id="player-settings">
+                        <div class="form-group">
+                            <label>کیفیت پیش‌فرض:</label>
+                            <select>
+                                <option value="high">بالا</option>
+                                <option value="medium">متوسط</option>
+                                <option value="low">پایین</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>حجم پیش‌فرض:</label>
+                            <input type="range" min="0" max="100" value="70">
+                        </div>
+                        <div class="form-group">
+                            <label>پخش خودکار:</label>
+                            <input type="checkbox" checked>
+                        </div>
+                        <button type="submit" class="btn-primary">ذخیره</button>
+                    </form>
+                </div>
+
+                <div class="settings-card">
+                    <h3>تنظیمات امنیتی</h3>
+                    <form id="security-settings">
+                        <div class="form-group">
+                            <label>تغییر رمز عبور:</label>
+                            <input type="password" placeholder="رمز عبور جدید">
+                        </div>
+                        <div class="form-group">
+                            <label>تأیید رمز عبور:</label>
+                            <input type="password" placeholder="تأیید رمز عبور">
+                        </div>
+                        <div class="form-group">
+                            <label>احراز هویت دو مرحله‌ای:</label>
+                            <input type="checkbox">
+                        </div>
+                        <button type="submit" class="btn-primary">ذخیره</button>
+                    </form>
+                </div>
+
+                <div class="settings-card">
+                    <h3>تنظیمات سئو</h3>
+                    <form id="seo-settings">
+                        <div class="form-group">
+                            <label>عنوان سئو:</label>
+                            <input type="text" value="بهترین سایت پخش موزیک آنلاین">
+                        </div>
+                        <div class="form-group">
+                            <label>توضیحات سئو:</label>
+                            <textarea rows="3">پخش آنلاین موزیک با کیفیت بالا و مجموعه گسترده از آهنگ‌های ایرانی و خارجی</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>کلمات کلیدی:</label>
+                            <input type="text" value="موزیک، پخش آنلاین، آهنگ، ایرانی">
+                        </div>
+                        <button type="submit" class="btn-primary">ذخیره</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backup Section -->
+        <div class="admin-section" id="backup">
+            <div class="section-header">
+                <h2>پشتیبان‌گیری و بازیابی</h2>
+            </div>
+
+            <div class="backup-grid">
+                <div class="backup-card">
+                    <h3>پشتیبان‌گیری</h3>
+                    <p>ایجاد نسخه پشتیبان از تمام داده‌های سایت</p>
+                    <div class="backup-options">
+                        <label><input type="checkbox" checked> پایگاه داده</label>
+                        <label><input type="checkbox" checked> فایل‌های موزیک</label>
+                        <label><input type="checkbox" checked> تصاویر</label>
+                        <label><input type="checkbox" checked> تنظیمات</label>
+                    </div>
+                    <button class="btn-primary" onclick="createBackup()">
+                        <i class="fas fa-download"></i>
+                        ایجاد پشتیبان
+                    </button>
+                </div>
+
+                <div class="backup-card">
+                    <h3>بازیابی</h3>
+                    <p>بازیابی از نسخه پشتیبان قبلی</p>
+                    <input type="file" id="backup-file" accept=".zip,.sql">
+                    <button class="btn-warning" onclick="restoreBackup()">
+                        <i class="fas fa-upload"></i>
+                        بازیابی از فایل
+                    </button>
+                </div>
+
+                <div class="backup-card">
+                    <h3>پشتیبان‌گیری خودکار</h3>
+                    <p>تنظیم پشتیبان‌گیری خودکار</p>
+                    <select id="auto-backup-frequency">
+                        <option value="daily">روزانه</option>
+                        <option value="weekly">هفتگی</option>
+                        <option value="monthly">ماهانه</option>
+                    </select>
+                    <button class="btn-secondary" onclick="setupAutoBackup()">
+                        <i class="fas fa-clock"></i>
+                        فعال‌سازی
+                    </button>
+                </div>
+
+                <div class="backup-card">
+                    <h3>تاریخچه پشتیبان</h3>
+                    <div class="backup-history" id="backup-history">
+                        <!-- Backup history will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="upload-modal" class="modal hidden">
+        <div class="modal-content large">
+            <span class="close-modal">&times;</span>
+            <h2>افزودن آهنگ جدید</h2>
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>فایل موزیک:</label>
+                        <input type="file" id="music-file" accept=".mp3,.wav,.flac" required>
+                    </div>
+                    <div class="form-group">
+                        <label>تصویر کاور:</label>
+                        <input type="file" id="cover-file" accept=".jpg,.jpeg,.png">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>عنوان آهنگ:</label>
+                        <input type="text" id="track-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>نام هنرمند:</label>
+                        <input type="text" id="track-artist" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>نام آلبوم:</label>
+                        <input type="text" id="track-album">
+                    </div>
+                    <div class="form-group">
+                        <label>ژانر:</label>
+                        <select id="track-genre" required>
+                            <option value="">انتخاب ژانر</option>
+                            <option value="پاپ">پاپ</option>
+                            <option value="راک">راک</option>
+                            <option value="سنتی">سنتی</option>
+                            <option value="بالاد">بالاد</option>
+                            <option value="کلاسیک">کلاسیک</option>
+                            <option value="فولک">فولک</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>توضیحات:</label>
+                    <textarea id="track-description" rows="3"></textarea>
+                </div>
+                <div class="upload-progress hidden">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="upload-progress"></div>
+                    </div>
+                    <span class="progress-text" id="upload-progress-text">0%</span>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('upload-modal')">انصراف</button>
+                    <button type="submit" class="btn-primary">آپلود آهنگ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
