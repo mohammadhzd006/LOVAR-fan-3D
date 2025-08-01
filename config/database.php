@@ -2,9 +2,9 @@
 // Database Configuration for cPanel
 class Database {
     private $host = 'localhost';
-    private $db_name = 'music_stream_db';
-    private $username = 'your_db_username';
-    private $password = 'your_db_password';
+    private $db_name = 'gbtechir_musicly';
+    private $username = 'gbtechir_hzd';
+    private $password = 'H.m33343536';
     private $charset = 'utf8mb4';
     public $conn;
 
@@ -31,15 +31,15 @@ class Database {
 
 // Database Settings
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'music_stream_db');
-define('DB_USER', 'your_db_username');
-define('DB_PASS', 'your_db_password');
+define('DB_NAME', 'gbtechir_musicly');
+define('DB_USER', 'gbtechir_hzd');
+define('DB_PASS', 'H.m33343536');
 define('DB_CHARSET', 'utf8mb4');
 
 // Site Settings
-define('SITE_URL', 'https://yourdomain.com');
+define('SITE_URL', 'https://gbtech.ir');
 define('SITE_NAME', 'موزیک استریم');
-define('ADMIN_EMAIL', 'admin@yourdomain.com');
+define('ADMIN_EMAIL', 'admin@gbtech.ir');
 
 // Upload Settings
 define('UPLOAD_PATH', 'uploads/');
@@ -48,7 +48,7 @@ define('IMAGES_PATH', 'uploads/images/');
 define('MAX_FILE_SIZE', 50 * 1024 * 1024); // 50MB
 
 // Security Settings
-define('JWT_SECRET', 'your_jwt_secret_key_here');
+define('JWT_SECRET', 'gbtech_musicly_secret_key_2024_hzd_secure');
 define('BCRYPT_COST', 12);
 
 // API Settings
