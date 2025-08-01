@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موزیک استریم - پخش آنلاین موسیقی</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-music"></i>
+            <span>موزیک استریم</span>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>خانه</span>
+            </a>
+            <a href="#" class="nav-item" data-page="search">
+                <i class="fas fa-search"></i>
+                <span>جستجو</span>
+            </a>
+            <a href="#" class="nav-item" data-page="library">
+                <i class="fas fa-bookmark"></i>
+                <span>کتابخانه شما</span>
+            </a>
+        </nav>
+
+        <div class="playlists-section">
+            <button class="create-playlist-btn">
+                <i class="fas fa-plus"></i>
+                ایجاد پلی‌لیست
+            </button>
+            
+            <div class="playlists-list">
+                <div class="playlist-item">
+                    <i class="fas fa-heart"></i>
+                    <span>آهنگ‌های پسندیده</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="top-bar">
+            <div class="nav-buttons">
+                <button class="nav-btn" id="back-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-btn" id="forward-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="جستجوی آهنگ، هنرمند یا آلبوم...">
+            </div>
+
+            <div class="user-menu">
+                <button class="user-btn" id="login-btn">
+                    <i class="fas fa-user"></i>
+                    ورود
+                </button>
+            </div>
+        </header>
+
+        <!-- Home Page -->
+        <div class="page" id="home-page">
+            <section class="featured-section">
+                <h2>آهنگ‌های ویژه</h2>
+                <div class="featured-tracks" id="featured-tracks">
+                    <!-- Featured tracks will be loaded here -->
+                </div>
+            </section>
+
+            <section class="recently-played">
+                <h2>اخیراً پخش شده</h2>
+                <div class="track-grid" id="recent-tracks">
+                    <!-- Recent tracks will be loaded here -->
+                </div>
+            </section>
+
+            <section class="popular-tracks">
+                <h2>محبوب‌ترین آهنگ‌ها</h2>
+                <div class="track-list" id="popular-tracks">
+                    <!-- Popular tracks will be loaded here -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Search Page -->
+        <div class="page hidden" id="search-page">
+            <div class="search-results" id="search-results">
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>چیزی جستجو کنید</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Library Page -->
+        <div class="page hidden" id="library-page">
+            <div class="library-header">
+                <h2>کتابخانه شما</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">همه</button>
+                    <button class="filter-btn" data-filter="playlists">پلی‌لیست‌ها</button>
+                    <button class="filter-btn" data-filter="liked">پسندیده</button>
+                </div>
+            </div>
+            <div class="library-content" id="library-content">
+                <!-- Library content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Bar -->
+    <div class="player-bar">
+        <div class="track-info">
+            <img src="images/default-cover.jpg" alt="Album Cover" id="current-cover" class="track-cover">
+            <div class="track-details">
+                <div class="track-title" id="current-title">آهنگی انتخاب نشده</div>
+                <div class="track-artist" id="current-artist">هنرمند</div>
+            </div>
+            <button class="like-btn" id="like-btn">
+                <i class="far fa-heart"></i>
+            </button>
+        </div>
+
+        <div class="player-controls">
+            <div class="control-buttons">
+                <button class="control-btn" id="shuffle-btn">
+                    <i class="fas fa-random"></i>
+                </button>
+                <button class="control-btn" id="prev-btn">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="control-btn play-btn" id="play-pause-btn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="control-btn" id="next-btn">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+                <button class="control-btn" id="repeat-btn">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            
+            <div class="progress-container">
+                <span class="time-current" id="current-time">0:00</span>
+                <div class="progress-bar" id="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                    <div class="progress-handle" id="progress-handle"></div>
+                </div>
+                <span class="time-total" id="total-time">0:00</span>
+            </div>
+        </div>
+
+        <div class="volume-controls">
+            <button class="control-btn" id="queue-btn">
+                <i class="fas fa-list"></i>
+            </button>
+            <button class="control-btn" id="volume-btn">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <div class="volume-slider">
+                <input type="range" id="volume-range" min="0" max="100" value="70">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal hidden" id="login-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>ورود به حساب کاربری</h2>
+            <form id="login-form">
+                <input type="email" placeholder="ایمیل" required>
+                <input type="password" placeholder="رمز عبور" required>
+                <button type="submit">ورود</button>
+            </form>
+            <p>حساب کاربری ندارید؟ <a href="#" id="show-register">ثبت نام</a></p>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="register-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>ثبت نام</h2>
+            <form id="register-form">
+                <input type="text" placeholder="نام" required>
+                <input type="email" placeholder="ایمیل" required>
+                <input type="password" placeholder="رمز عبور" required>
+                <button type="submit">ثبت نام</button>
+            </form>
+            <p>حساب کاربری دارید؟ <a href="#" id="show-login">ورود</a></p>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="audio-player" preload="none"></audio>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

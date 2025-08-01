@@ -1,0 +1,174 @@
+# Music Stream .htaccess Configuration
+
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Force HTTPS (if SSL certificate is available)
+# Uncomment the following lines if you have SSL
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# PHP Configuration for File Uploads
+php_value upload_max_filesize 50M
+php_value post_max_size 50M
+php_value max_execution_time 300
+php_value max_input_time 300
+php_value memory_limit 256M
+
+# Security Headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+# CORS Headers for API
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+# Handle OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Gzip Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# Browser Caching
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType audio/mpeg "access plus 1 week"
+    ExpiresByType audio/wav "access plus 1 week"
+    ExpiresByType audio/flac "access plus 1 week"
+</IfModule>
+
+# Cache Control
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|webp|svg|ico)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+    <FilesMatch "\.(mp3|wav|flac|m4a)$">
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+</IfModule>
+
+# Protect sensitive files
+<Files "config/database.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "database.sql">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Protect directories
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# Block access to hidden files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to backup files
+<FilesMatch "\.(bak|backup|old|tmp|temp)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent hotlinking of images
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?yourdomain\.com [NC]
+RewriteCond %{REQUEST_URI} \.(gif|jpg|jpeg|png|webp)$ [NC]
+RewriteRule \.(gif|jpg|jpeg|png|webp)$ - [F]
+
+# API Routing
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ api/index.php [QSA,L]
+
+# Clean URLs for pages
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/?$ page.php?slug=$1 [QSA,L]
+
+# Error Pages
+ErrorDocument 404 /404.html
+ErrorDocument 403 /403.html
+ErrorDocument 500 /500.html
+
+# Limit file upload size in forms
+LimitRequestBody 52428800
+
+# Block bad bots
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_USER_AGENT} (ahrefs|alexibot|majestic|mj12bot|crawler) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# Rate limiting (if mod_evasive is available)
+# <IfModule mod_evasive24.c>
+#     DOSHashTableSize    2048
+#     DOSPageCount        10
+#     DOSPageInterval     1
+#     DOSSiteCount        50
+#     DOSSiteInterval     1
+#     DOSBlockingPeriod   60
+# </IfModule>
+
+# Prevent access to version control directories
+<IfModule mod_rewrite.c>
+    RewriteRule ^(.*/)?\.git/ - [F,L]
+    RewriteRule ^(.*/)?\.svn/ - [F,L]
+    RewriteRule ^(.*/)?\.hg/ - [F,L]
+</IfModule>
+
+# UTF-8 encoding
+AddDefaultCharset UTF-8
+
+# MIME types for audio files
+<IfModule mod_mime.c>
+    AddType audio/mpeg mp3
+    AddType audio/wav wav
+    AddType audio/flac flac
+    AddType audio/mp4 m4a
+    AddType audio/ogg ogg
+    AddType audio/webm webm
+</IfModule>
+
+# Security: Hide server signature
+ServerTokens Prod
+ServerSignature Off
+
+# Prevent image hotlinking and serve placeholder
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?yourdomain\.com [NC]
+RewriteCond %{REQUEST_URI} \.(gif|jpg|jpeg|png|webp)$ [NC]
+RewriteRule \.(gif|jpg|jpeg|png|webp)$ /images/hotlink-protection.jpg [R=302,L]
